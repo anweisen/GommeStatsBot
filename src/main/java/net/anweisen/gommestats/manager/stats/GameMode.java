@@ -105,7 +105,6 @@ public enum GameMode {
 		}
 	}
 
-	// HowToWinRate: Games-Deaths  Games-Wins  Wins-Deaths
 	private static void calculateWinRate(PlayerStats stats) {
 		List<StatsAttribute> values = stats.getGameMode().getValues();
 		if (listContains(values, GAMES, WINS)) {

@@ -1,10 +1,7 @@
 package net.anweisen.gommestats.manager.stats;
 
 import net.anweisen.gommestats.manager.ConnectionManager;
-import net.anweisen.gommestats.manager.stats.PlayerStats;
-import net.anweisen.gommestats.utils.entities.StatsHidedException;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
+import net.anweisen.gommestats.utils.entities.StatsHiddenException;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -19,16 +16,16 @@ import java.io.IOException;
 
 public class StatsWrapper {
 
-	public static PlayerStats getsStatsByNameWithException(String playerName, GameMode gamemode) throws IOException, StatsHidedException {
+	public static PlayerStats getsStatsByNameWithException(String playerName, GameMode gamemode) throws IOException, StatsHiddenException {
 
 		String request = PlayerStats.getURL(playerName, gamemode);
 		Document document = ConnectionManager.openConnection(request);
 
 		Element element = document.getElementById(gamemode.getHTMLName());
-		if (element == null) throw new StatsHidedException();
+		if (element == null) throw new StatsHiddenException();
 
 		Elements elements = element.getElementsByClass("score");
-		if (elements == null || elements.isEmpty()) throw new StatsHidedException();
+		if (elements == null || elements.isEmpty()) throw new StatsHiddenException();
 
 		return gamemode.instance(elements);
 

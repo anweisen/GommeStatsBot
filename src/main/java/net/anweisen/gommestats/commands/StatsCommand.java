@@ -1,20 +1,17 @@
 package net.anweisen.gommestats.commands;
 
-import net.anweisen.gommestats.commandmanager.CommandEvent;
-import net.anweisen.gommestats.commandmanager.commands.Command;
 import net.anweisen.gommestats.manager.stats.GameMode;
 import net.anweisen.gommestats.manager.stats.PlayerStats;
 import net.anweisen.gommestats.manager.stats.StatsAttribute;
 import net.anweisen.gommestats.manager.stats.StatsWrapper;
 import net.anweisen.gommestats.utils.entities.Embeds;
 import net.anweisen.gommestats.utils.Utils;
-import net.anweisen.gommestats.utils.entities.StatsHidedException;
+import net.anweisen.gommestats.utils.entities.StatsHiddenException;
+import net.codingarea.engine.discord.commandmanager.Command;
+import net.codingarea.engine.discord.commandmanager.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.json.simple.JSONObject;
 
-import java.text.DecimalFormat;
-
-import static net.anweisen.gommestats.utils.Utils.syntax;
 
 /**
  * @author anweisen
@@ -29,7 +26,7 @@ public class StatsCommand extends Command {
 	}
 
 	@Override
-	public void onCommand(CommandEvent event) {
+	public void onCommand(CommandEvent event) throws Exception {
 
 		if (event.getArgs().length != 1 && event.getArgs().length != 2) {
 			event.queueReply("Benutze " + syntax(event, "<gamemode> [player]"));
@@ -38,7 +35,7 @@ public class StatsCommand extends Command {
 
 		GameMode gamemode = GameMode.byName(event.getArg(0));
 		if (gamemode == null) {
-			event.queueReply("Den Spielmodus `" + event.getArg(0) + "` gibt es nicht. Mit " + syntax(event, "gamemodes") + " siehst du alle.");
+			event.queueReply("Den Spielmodus `" + event.getArg(0) + "` gibt es nicht. Mit " + CommandEvent.syntax(event, "gamemodes", false) + " siehst du alle.");
 			return;
 		}
 
@@ -66,7 +63,7 @@ public class StatsCommand extends Command {
 
 			} catch (Exception ignored) { }
 
-			for (StatsAttribute currentAttribute : stats.getDeclaredAttribute()) {
+			for (StatsAttribute currentAttribute : stats.getDeclaredAttributes()) {
 				builder.append(currentAttribute.getEmoji() + " | **" + currentAttribute.getName() + "** » " + stats.getString(currentAttribute) + "\n");
 			}
 
@@ -75,10 +72,8 @@ public class StatsCommand extends Command {
 
 			event.queueReply(embed.build());
 
-		} catch (StatsHidedException ignored) {
+		} catch (StatsHiddenException ignored) {
 			event.queueReply("Der Spieler hat seine Stats versteckt");
-		} catch (Exception ex) {
-			event.queueReply("Etwas ist schief gelaufen: `" + ex.getMessage() + "`");
 		}
 
 	}

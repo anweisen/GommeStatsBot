@@ -1,16 +1,15 @@
 package net.anweisen.gommestats.commands;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
-import net.anweisen.gommestats.commandmanager.CommandEvent;
-import net.anweisen.gommestats.commandmanager.commands.Command;
 import net.anweisen.gommestats.manager.clans.Clan;
 import net.anweisen.gommestats.manager.clans.ClanRank;
 import net.anweisen.gommestats.manager.clans.ClanWrapper;
 import net.anweisen.gommestats.manager.stats.PlayerStats;
 import net.anweisen.gommestats.utils.entities.Embeds;
+import net.codingarea.engine.discord.commandmanager.Command;
+import net.codingarea.engine.discord.commandmanager.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
-
-import static net.anweisen.gommestats.utils.Utils.syntax;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author anweisen
@@ -25,7 +24,7 @@ public class ClanInfoCommand extends Command {
 	}
 
 	@Override
-	public void onCommand(CommandEvent event) {
+	public void onCommand(@NotNull final CommandEvent event) throws Exception {
 
 		if (event.getArgs().length != 1) {
 			event.queueReply("Benutze " + syntax(event, "<clan>"));
@@ -33,7 +32,7 @@ public class ClanInfoCommand extends Command {
 		}
 
 		String clanName = event.getArg(0);
-		event.getChannel().sendTyping().queue();
+		event.sendTyping();
 
 		try {
 
@@ -70,8 +69,6 @@ public class ClanInfoCommand extends Command {
 
 		} catch (FailingHttpStatusCodeException ignored) {
 			event.queueReply("Den Clan `" + clanName + "` gibt es nicht. Achte auf Groß- und Kleinschreibung.");
-		} catch (Exception ex) {
-			event.queueReply("Etwas ist schief gelaufen: `" + ex.getMessage() + "`");
 		}
 
 	}

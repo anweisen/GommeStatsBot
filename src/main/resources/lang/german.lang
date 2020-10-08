@@ -1,0 +1,7 @@
+name=German
+alias=de,deutsch
+
+syntax=Benutze %syntax%
+
+prefix-too-long=Der Prefix kann nicht länger als **%max%** sein
+prefix-set=Der Prefix wurde auf **%prefix%** gesetzt

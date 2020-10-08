@@ -41,11 +41,26 @@ public class PlayerStats {
 		return mode;
 	}
 
-	public Set<StatsAttribute> getDeclaredAttribute() {
+	public Set<StatsAttribute> getDeclaredAttributes() {
 		return stats.keySet();
 	}
 
 	public String getString(StatsAttribute attribute) {
 		return attribute.value(getDouble(attribute));
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder stats = new StringBuilder();
+		for (StatsAttribute currentAttribute : getDeclaredAttributes()) {
+			if (!stats.toString().isEmpty()) {
+				stats.append(", ");
+			}
+			stats.append(currentAttribute.getName() + "=" + getString(currentAttribute));
+		}
+		return "PlayerStats{" +
+				"GameMode=" + mode + ", " +
+				stats +
+				'}';
 	}
 }

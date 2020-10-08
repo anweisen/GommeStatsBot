@@ -1,6 +1,5 @@
 package net.anweisen.gommestats.manager;
 
-import net.anweisen.gommestats.manager.stats.PlayerStats;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

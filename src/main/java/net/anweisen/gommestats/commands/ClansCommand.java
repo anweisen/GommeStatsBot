@@ -1,9 +1,10 @@
 package net.anweisen.gommestats.commands;
 
-import net.anweisen.gommestats.commandmanager.CommandEvent;
-import net.anweisen.gommestats.commandmanager.commands.Command;
 import net.anweisen.gommestats.manager.clans.ClanWrapper;
-import net.anweisen.gommestats.manager.stats.StatsAttribute.AttributeValueFormatter;
+import net.codingarea.engine.discord.commandmanager.Command;
+import net.codingarea.engine.discord.commandmanager.CommandEvent;
+import net.codingarea.engine.utils.NumberFormatter;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author anweisen
@@ -18,17 +19,9 @@ public class ClansCommand extends Command {
 	}
 
 	@Override
-	public void onCommand(CommandEvent event) {
-
-		try {
-
-			int clans = ClanWrapper.getActiveClansWithException();
-			event.queueReply("Es sind derzeit **" + AttributeValueFormatter.MIDDLE_NUMBER.format(clans) + " Clans** aktiv");
-
-		} catch (Exception ex) {
-			event.queueReply("Etwas ist schief gelaufen: `" + ex.getMessage() + "`");
-		}
-
+	public void onCommand(@NotNull final CommandEvent event) throws Exception {
+		int clans = ClanWrapper.getActiveClansWithException();
+		event.queueReply("Es sind derzeit **" + NumberFormatter.MIDDLE_NUMBER.format(clans) + " Clans** aktiv");
 	}
 
 }
