@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
  * GommeBot developed on 07-31-2020
  * https://github.com/anweisen
  */
-
 public class ClanInfoCommand extends Command {
 
 	public ClanInfoCommand() {

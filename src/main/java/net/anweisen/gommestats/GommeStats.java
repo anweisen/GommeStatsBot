@@ -1,16 +1,16 @@
 package net.anweisen.gommestats;
 
-import net.anweisen.gommestats.commands.*;
-import net.codingarea.engine.discord.commandmanager.CommandHandler;
-import net.codingarea.engine.discord.defaults.*;
-import net.codingarea.engine.lang.ConstantLanguageManager;
-import net.codingarea.engine.lang.Language;
-import net.codingarea.engine.sql.MySQL;
-import net.codingarea.engine.sql.SQL;
-import net.codingarea.engine.utils.ConfigLoader;
-import net.dv8tion.jda.api.requests.GatewayIntent;
-import net.dv8tion.jda.api.sharding.ShardManager;
-import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import net.anweisen.gommestats.manager.clans.ClanWrapper;
+import net.anweisen.gommestats.manager.stats.GameMode;
+import net.anweisen.gommestats.manager.stats.PlayerStats;
+import net.anweisen.gommestats.manager.stats.StatsWrapper;
+import net.codingarea.engine.utils.LogHelper;
+
+import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static net.codingarea.engine.utils.LogHelper.info;
 
 /**
  * @author anweisen
@@ -29,6 +29,38 @@ public class GommeStats {
 
 	public GommeStats() throws Throwable {
 
+		String[] names = new String[] {
+				"anweisen", "KxmischesDomi", "7alex", "Angelo", "GommeHD", "Dner", "rewinside", "Sturmwaffel", "Dominik",
+				"unge", "ungespielt", "xMarie_x", "FABIOMTK05", "ImAwesomeCereal", "blobheart", "zzapi9z", "vfries", "ChrisandGarrett"
+		};
+
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				System.err.println();
+				for (String name : names) {
+
+					new Thread(() -> {
+
+						try {
+
+							long start = System.currentTimeMillis();
+							PlayerStats[] stats = StatsWrapper.getsStatsByName(name, GameMode.values());
+							info("Finished " + name + " in " + (System.currentTimeMillis()-start) + "ms");
+
+						} catch (Exception ex) {
+							System.err.println(ex.getClass().getSimpleName() + " for user " + name);
+						}
+
+					}).start();
+
+				}
+
+			}
+		}, 1, 15*1000);
+
+
+/*
 		ConfigLoader config = new ConfigLoader("config", "token");
 		CommandHandler handler = new CommandHandler();
 		SQL sql = MySQL.defaultOfConfig(config);
@@ -49,6 +81,7 @@ public class GommeStats {
 
 
 		new DefaultStatusChanger(shardManager, "", "gs stats • Statistiken", "gs clan • Claninfos").sync(15);
+		*/
 
 	}
 }

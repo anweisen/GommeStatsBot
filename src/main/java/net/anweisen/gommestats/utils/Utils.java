@@ -74,6 +74,7 @@ public class Utils {
 		if (uuid == null || uuid.equals("error")) uuid = "c06f89064c8a49119c29ea1dbd1aab82"; // uuid of MHF_Steve
 		return "https://crafatar.com/avatars/" + uuid + "?size=128&default=MHF_Steve&overlay";
 	}
+
 	@SafeVarargs
 	public static <T> T[] a(T... strings) {
 		return strings;
@@ -85,8 +86,8 @@ public class Utils {
 	}
 
 	@SafeVarargs
-	public static <T> boolean listContains(List<T> list, T... container) {
-		for (T current : container) {
+	public static <T> boolean listContains(List<T> list, T... contain) {
+		for (T current : contain) {
 			if (!list.contains(current)) return false;
 		}
 		return true;

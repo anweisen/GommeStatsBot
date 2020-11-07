@@ -1,5 +1,11 @@
 package net.anweisen.gommestats.manager.stats;
 
+import net.codingarea.engine.utils.NumberConversions;
+import org.json.simple.JSONObject;
+
+import javax.annotation.Nonnull;
+import java.lang.reflect.Field;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -21,20 +27,12 @@ public class PlayerStats {
 		this.mode = mode;
 	}
 
-	public void setInt(StatsAttribute attribute, int value) {
-		setDouble(attribute, value);
-	}
-
-	public void setDouble(StatsAttribute attribute, double value) {
+	public void set(StatsAttribute attribute, double value) {
 		stats.put(attribute, value);
 	}
 
 	public double getDouble(StatsAttribute attribute) {
 		return stats.getOrDefault(attribute, 0D);
-	}
-
-	public int getInt(StatsAttribute attribute) {
-		return (int) getDouble(attribute);
 	}
 
 	public GameMode getGameMode() {
@@ -49,18 +47,28 @@ public class PlayerStats {
 		return attribute.value(getDouble(attribute));
 	}
 
+	public JSONObject toJSON() {
+		JSONObject json = new JSONObject();
+		for (Entry<StatsAttribute, Double> entry : stats.entrySet()) {
+			json.put(entry.getKey().name(), entry.getValue());
+		}
+		return json;
+	}
+
+	public static PlayerStats ofJSON(@Nonnull GameMode mode, @Nonnull JSONObject json) {
+		PlayerStats stats = new PlayerStats(mode);
+		for (StatsAttribute attribute : mode.getValues()) {
+			double value = NumberConversions.toDouble(json.get(attribute.name()));
+			stats.set(attribute, value);
+		}
+		return stats;
+	}
+
 	@Override
 	public String toString() {
-		StringBuilder stats = new StringBuilder();
-		for (StatsAttribute currentAttribute : getDeclaredAttributes()) {
-			if (!stats.toString().isEmpty()) {
-				stats.append(", ");
-			}
-			stats.append(currentAttribute.getName() + "=" + getString(currentAttribute));
-		}
 		return "PlayerStats{" +
-				"GameMode=" + mode + ", " +
-				stats +
+				"game=" + mode + ", " +
+				"stats=" + toJSON() +
 				'}';
 	}
 }

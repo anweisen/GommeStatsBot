@@ -1,13 +1,12 @@
 package net.anweisen.gommestats.manager.clans;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.InteractivePage;
-import com.gargoylesoftware.htmlunit.ScriptException;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.*;
+import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.WebConsole.Logger;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.javascript.JavaScriptErrorListener;
 import net.anweisen.gommestats.manager.ConnectionManager;
-import org.apache.http.util.Asserts;
+import net.codingarea.engine.utils.DefaultLogger;
+import net.codingarea.engine.utils.NumberConversions;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,11 +15,11 @@ import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.CSSParseException;
 import org.w3c.css.sac.ErrorHandler;
 import sun.awt.SunToolkit.OperationTimedOut;
+import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.function.Consumer;
 
 /**
  * @author anweisen
@@ -33,12 +32,12 @@ public class ClanWrapper {
 	public static int getActiveClansWithException() throws IOException {
 
 		String request = "https://www.gommehd.net/clans";
-		Document document = ConnectionManager.openConnection(request);
+		Document document = ConnectionManager.openConnection(request, 7500);
 
 		Element element = document.getElementById("total-clans");
 		String text = element.text().replace(".", "");
 
-		return Integer.parseInt(text);
+		return NumberConversions.toInt(text);
 
 	}
 
@@ -48,6 +47,7 @@ public class ClanWrapper {
 
 		System.out.println("Creating client");
 		WebClient webClient = new WebClient(BrowserVersion.FIREFOX_45);
+		webClient.getWebConsole().setLogger(LOGGER);
 		webClient.setCssErrorHandler(CSS_ERROR_HANDLER);
 		webClient.setJavaScriptErrorListener(JAVA_SCRIPT_ERROR_LISTENER);
 		webClient.setJavaScriptTimeout(5000);
@@ -65,7 +65,8 @@ public class ClanWrapper {
 			// Waiting for javascript to finish its job
 			// Ending waiting after 7.5 seconds
 			Thread.sleep(100);
-			if ((start+7.5*1000) < System.currentTimeMillis()) throw new OperationTimedOut("Javascript read timed out");
+			if ((start+7.5*1000) < System.currentTimeMillis())
+				throw new OperationTimedOut("Javascript read timed out");
 		}
 		System.out.println("Finished waiting");
 
@@ -138,15 +139,57 @@ public class ClanWrapper {
 		public void scriptException(InteractivePage interactivePage, ScriptException e) { }
 
 		@Override
-		public void timeoutError(InteractivePage interactivePage, long l, long l1) {
-
-		}
+		public void timeoutError(InteractivePage interactivePage, long l, long l1) { }
 
 		@Override
 		public void malformedScriptURL(InteractivePage interactivePage, String s, MalformedURLException e) { }
 
 		@Override
 		public void loadScriptError(InteractivePage interactivePage, URL url, Exception e) { }
+
+	};
+
+	public static final Logger LOGGER = new Logger() {
+
+		@Override
+		public boolean isTraceEnabled() {
+			return true;
+		}
+
+		@Override
+		public void trace(Object message) { }
+
+		@Override
+		public boolean isDebugEnabled() {
+			return true;
+		}
+
+		@Override
+		public void debug(Object message) { }
+
+		@Override
+		public boolean isInfoEnabled() {
+			return true;
+		}
+
+		@Override
+		public void info(Object message) { }
+
+		@Override
+		public boolean isWarnEnabled() {
+			return true;
+		}
+
+		@Override
+		public void warn(Object message) { }
+
+		@Override
+		public boolean isErrorEnabled() {
+			return true;
+		}
+
+		@Override
+		public void error(Object message) { }
 
 	};
 

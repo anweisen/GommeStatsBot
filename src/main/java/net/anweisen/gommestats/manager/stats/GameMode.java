@@ -1,5 +1,7 @@
 package net.anweisen.gommestats.manager.stats;
 
+import net.codingarea.engine.utils.LogHelper;
+import net.codingarea.engine.utils.NumberConversions;
 import org.jsoup.select.Elements;
 
 import java.util.Arrays;
@@ -29,6 +31,10 @@ public enum GameMode {
 	COOKIES("Cookies", a(), WINS, StatsAttribute.COOKIES),
 	HARDCORE("Hardcore", a("ffa"), KILLS, DEATHS),
 	;
+
+	public String lowercaseName() {
+		return name().toLowerCase();
+	}
 
 	public static GameMode byName(String name) {
 		for (GameMode currentGameMode : GameMode.values()) {
@@ -63,13 +69,13 @@ public enum GameMode {
 		for (int i = 0; i < values.length; i++) {
 			try {
 
-				int value = Integer.parseInt(elements.get(i).text());
+				int value = NumberConversions.toInt(elements.get(i).text());
 				StatsAttribute attribute = values[i];
 
-				stats.setInt(attribute, value);
+				stats.set(attribute, value);
 
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				LogHelper.error(ex);
 			}
 		}
 
@@ -92,15 +98,14 @@ public enum GameMode {
 	private static void calculateKD(PlayerStats stats) {
 		if (stats.getGameMode().showKD()) {
 
-			double kills = stats.getInt(KILLS);
-			double deaths = stats.getInt(DEATHS);
+			double kills = stats.getDouble(KILLS);
+			double deaths = stats.getDouble(DEATHS);
 
-			if (deaths <= 0) {
+			if (deaths <= 0)
 				deaths = 1;
-			}
 
 			double kd = kills / deaths;
-			stats.setDouble(KD, kd);
+			stats.set(KD, kd);
 
 		}
 	}
@@ -109,12 +114,12 @@ public enum GameMode {
 		List<StatsAttribute> values = stats.getGameMode().getValues();
 		if (listContains(values, GAMES, WINS)) {
 
-			double gamesPlayed = stats.getInt(GAMES);
-			double gamesWon = stats.getInt(WINS);
+			double gamesPlayed = stats.getDouble(GAMES);
+			double gamesWon = stats.getDouble(WINS);
 
 			double winRate = (gamesPlayed <= 0 ? 0 : (gamesWon / gamesPlayed) * 100);
 
-			stats.setDouble(WINRATE, winRate);
+			stats.set(WINRATE, winRate);
 
 		}
 	}

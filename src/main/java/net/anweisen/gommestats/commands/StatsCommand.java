@@ -48,7 +48,7 @@ public class StatsCommand extends Command {
 
 		try {
 
-			PlayerStats stats = StatsWrapper.getsStatsByNameWithException(player, gamemode);
+			PlayerStats stats = StatsWrapper.getsStatsByName(player, gamemode);
 			EmbedBuilder embed = Embeds.builder();
 			StringBuilder builder = new StringBuilder();
 			String headURL = null;
