@@ -8,9 +8,11 @@ import net.anweisen.gommestats.utils.entities.Embeds;
 import net.anweisen.gommestats.utils.Utils;
 import net.anweisen.gommestats.utils.entities.StatsHiddenException;
 import net.codingarea.engine.discord.commandmanager.Command;
-import net.codingarea.engine.discord.commandmanager.CommandEvent;
+import net.codingarea.engine.discord.commandmanager.event.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.json.simple.JSONObject;
+
+import javax.annotation.Nonnull;
 
 
 /**
@@ -26,20 +28,20 @@ public class StatsCommand extends Command {
 	}
 
 	@Override
-	public void onCommand(CommandEvent event) throws Exception {
+	public void onCommand(@Nonnull CommandEvent event) throws Exception {
 
 		if (event.getArgs().length != 1 && event.getArgs().length != 2) {
-			event.queueReply("Benutze " + syntax(event, "<gamemode> [player]"));
+			event.reply("Benutze " + syntax(event, "<gamemode> [player]"));
 			return;
 		}
 
 		GameMode gamemode = GameMode.byName(event.getArg(0));
 		if (gamemode == null) {
-			event.queueReply("Den Spielmodus `" + event.getArg(0) + "` gibt es nicht. Mit " + CommandEvent.syntax(event, "gamemodes", false) + " siehst du alle.");
+			event.reply("Den Spielmodus `" + removeMarkdown(event.getArg(0), true) + "` gibt es nicht. Mit " + CommandEvent.syntax(event, "gamemodes", false) + " siehst du alle.");
 			return;
 		}
 
-		String player = event.getMemberName();
+		String player = event.getEffectiveUserName();
 		if (event.getArgs().length == 2) {
 			player = event.getArg(1);
 		}
@@ -70,10 +72,10 @@ public class StatsCommand extends Command {
 			embed.setAuthor((headURL != null ? "» " : "") + gamemode.getName() + " Stats von " + player, PlayerStats.getURL(player, gamemode), headURL);
 			embed.setDescription(builder.toString());
 
-			event.queueReply(embed.build());
+			event.reply(embed.build());
 
 		} catch (StatsHiddenException ignored) {
-			event.queueReply("Der Spieler hat seine Stats versteckt");
+			event.reply("Der Spieler hat seine Stats versteckt");
 		}
 
 	}

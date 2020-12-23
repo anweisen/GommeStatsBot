@@ -2,7 +2,9 @@ package net.anweisen.gommestats.commands;
 
 import net.anweisen.gommestats.GommeStats;
 import net.codingarea.engine.discord.commandmanager.Command;
-import net.codingarea.engine.discord.commandmanager.CommandEvent;
+import net.codingarea.engine.discord.commandmanager.event.CommandEvent;
+
+import javax.annotation.Nonnull;
 
 /**
  * @author anweisen
@@ -16,7 +18,7 @@ public class InviteCommand extends Command {
 	}
 
 	@Override
-	public void onCommand(CommandEvent event) {
-		event.queueReply("Du kannst mich über diesen Link einladen: \n" + GommeStats.BOT_INVITE, message -> message.suppressEmbeds(true).queue());
+	public void onCommand(@Nonnull CommandEvent event) {
+		event.reply("Du kannst mich über diesen Link einladen: \n" + GommeStats.BOT_INVITE, message -> message.suppressEmbeds(true).queue());
 	}
 }

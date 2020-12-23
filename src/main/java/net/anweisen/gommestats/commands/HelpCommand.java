@@ -3,7 +3,7 @@ package net.anweisen.gommestats.commands;
 import net.anweisen.gommestats.GommeStats;
 import net.anweisen.gommestats.utils.entities.Embeds;
 import net.codingarea.engine.discord.commandmanager.Command;
-import net.codingarea.engine.discord.commandmanager.CommandEvent;
+import net.codingarea.engine.discord.commandmanager.event.CommandEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -19,7 +19,7 @@ public class HelpCommand extends Command {
 
 	@Override
 	public void onCommand(@NotNull final CommandEvent event) {
-		event.queueReply(Embeds.builder()
+		event.reply(Embeds.builder()
 				.setAuthor("» " + event.getJDA().getSelfUser().getName() + " • Information", GommeStats.BOT_INVITE, event.getJDA().getSelfUser().getEffectiveAvatarUrl())
 				.addField("Information (4)", "» " + CommandEvent.syntax(event, "stats <gamemode> [player]", false) + " • Sehe Spielerstatistiken ein\n" +
 														"» " + CommandEvent.syntax(event, "clan <clan>", false) + " • Sehe Claninfos ein\n" +

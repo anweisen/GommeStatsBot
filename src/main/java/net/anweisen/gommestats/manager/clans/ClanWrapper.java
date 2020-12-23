@@ -1,11 +1,13 @@
 package net.anweisen.gommestats.manager.clans;
 
-import com.gargoylesoftware.htmlunit.*;
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.InteractivePage;
+import com.gargoylesoftware.htmlunit.ScriptException;
+import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebConsole.Logger;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.gargoylesoftware.htmlunit.javascript.JavaScriptErrorListener;
 import net.anweisen.gommestats.manager.ConnectionManager;
-import net.codingarea.engine.utils.DefaultLogger;
 import net.codingarea.engine.utils.NumberConversions;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -15,7 +17,6 @@ import org.w3c.css.sac.CSSException;
 import org.w3c.css.sac.CSSParseException;
 import org.w3c.css.sac.ErrorHandler;
 import sun.awt.SunToolkit.OperationTimedOut;
-import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

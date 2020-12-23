@@ -1,10 +1,24 @@
 package net.anweisen.gommestats;
 
+import net.anweisen.gommestats.commands.*;
 import net.anweisen.gommestats.manager.clans.ClanWrapper;
 import net.anweisen.gommestats.manager.stats.GameMode;
 import net.anweisen.gommestats.manager.stats.PlayerStats;
 import net.anweisen.gommestats.manager.stats.StatsWrapper;
+import net.codingarea.engine.discord.commandmanager.CommandHandler;
+import net.codingarea.engine.discord.commandmanager.ICommandHandler;
+import net.codingarea.engine.discord.defaults.*;
+import net.codingarea.engine.discord.defaults.DefaultStatusChanger.Generators;
+import net.codingarea.engine.lang.ConstantLanguageManager;
+import net.codingarea.engine.lang.Language;
+import net.codingarea.engine.sql.MySQL;
+import net.codingarea.engine.sql.SQL;
 import net.codingarea.engine.utils.LogHelper;
+import net.codingarea.engine.utils.config.ConfigLoader;
+import net.dv8tion.jda.api.entities.Activity.ActivityType;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 
 import java.util.Arrays;
 import java.util.Timer;
@@ -29,48 +43,16 @@ public class GommeStats {
 
 	public GommeStats() throws Throwable {
 
-		String[] names = new String[] {
-				"anweisen", "KxmischesDomi", "7alex", "Angelo", "GommeHD", "Dner", "rewinside", "Sturmwaffel", "Dominik",
-				"unge", "ungespielt", "xMarie_x", "FABIOMTK05", "ImAwesomeCereal", "blobheart", "zzapi9z", "vfries", "ChrisandGarrett"
-		};
-
-		new Timer().schedule(new TimerTask() {
-			@Override
-			public void run() {
-				System.err.println();
-				for (String name : names) {
-
-					new Thread(() -> {
-
-						try {
-
-							long start = System.currentTimeMillis();
-							PlayerStats[] stats = StatsWrapper.getsStatsByName(name, GameMode.values());
-							info("Finished " + name + " in " + (System.currentTimeMillis()-start) + "ms");
-
-						} catch (Exception ex) {
-							System.err.println(ex.getClass().getSimpleName() + " for user " + name);
-						}
-
-					}).start();
-
-				}
-
-			}
-		}, 1, 15*1000);
-
-
-/*
 		ConfigLoader config = new ConfigLoader("config", "token");
-		CommandHandler handler = new CommandHandler();
 		SQL sql = MySQL.defaultOfConfig(config);
 		DefaultPrefixCache prefixCache = new DefaultPrefixCache(sql, "gs ");
+		ICommandHandler handler = new CommandHandler(prefixCache);
 		new ConstantLanguageManager(Language.loadResource("lang/german.lang"));
 		ShardManager shardManager = DefaultBuilder.createShardManager(config.getString("token"),
 																	  GatewayIntent.DIRECT_MESSAGES, GatewayIntent.DIRECT_MESSAGE_TYPING,
 																	  GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_TYPING)
 												  .disableCache(CacheFlag.CLIENT_STATUS, CacheFlag.ACTIVITY, CacheFlag.EMOTE, CacheFlag.VOICE_STATE)
-												  .addEventListeners(new DefaultCommandListener(handler, prefixCache))
+												  .addEventListeners(new DefaultCommandListener(handler))
 												  .build();
 
 		handler.registerCommands(
@@ -80,8 +62,8 @@ public class GommeStats {
 		);
 
 
-		new DefaultStatusChanger(shardManager, "", "gs stats • Statistiken", "gs clan • Claninfos").sync(15);
-		*/
+		DefaultStatusChanger.forShardManager(shardManager, Generators.of(ActivityType.DEFAULT, "",
+				"gs stats • Statistiken", "gs clan • Claninfos")).sync(15);
 
 	}
 }

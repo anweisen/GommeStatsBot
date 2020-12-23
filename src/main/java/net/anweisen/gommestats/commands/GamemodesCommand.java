@@ -2,7 +2,7 @@ package net.anweisen.gommestats.commands;
 
 import net.anweisen.gommestats.manager.stats.GameMode;
 import net.codingarea.engine.discord.commandmanager.Command;
-import net.codingarea.engine.discord.commandmanager.CommandEvent;
+import net.codingarea.engine.discord.commandmanager.event.CommandEvent;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -18,7 +18,7 @@ public class GamemodesCommand extends Command {
 	}
 
 	@Override
-	public void onCommand(@NotNull final CommandEvent event) {
+	public void onCommand(@NotNull CommandEvent event) {
 
 		StringBuilder modes = new StringBuilder();
 		for (GameMode currentGameMode : GameMode.values()) {
@@ -28,6 +28,6 @@ public class GamemodesCommand extends Command {
 			modes.append(currentGameMode.getName());
 		}
 
-		event.queueReply("Es gibt die folgenden Spielmodis: \n`" + modes + "`");
+		event.reply("Es gibt die folgenden Spielmodis: \n`" + modes + "`");
 	}
 }

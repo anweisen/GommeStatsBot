@@ -7,7 +7,7 @@ import net.anweisen.gommestats.manager.clans.ClanWrapper;
 import net.anweisen.gommestats.manager.stats.PlayerStats;
 import net.anweisen.gommestats.utils.entities.Embeds;
 import net.codingarea.engine.discord.commandmanager.Command;
-import net.codingarea.engine.discord.commandmanager.CommandEvent;
+import net.codingarea.engine.discord.commandmanager.event.CommandEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +26,7 @@ public class ClanInfoCommand extends Command {
 	public void onCommand(@NotNull final CommandEvent event) throws Exception {
 
 		if (event.getArgs().length != 1) {
-			event.queueReply("Benutze " + syntax(event, "<clan>"));
+			event.reply("Benutze " + syntax(event, "<clan>"));
 			return;
 		}
 
@@ -64,10 +64,10 @@ public class ClanInfoCommand extends Command {
 
 			}
 
-			event.queueReply(embed.build());
+			event.reply(embed.build());
 
 		} catch (FailingHttpStatusCodeException ignored) {
-			event.queueReply("Den Clan `" + clanName + "` gibt es nicht. Achte auf Groß- und Kleinschreibung.");
+			event.reply("Den Clan `" + clanName + "` gibt es nicht. Achte auf Groß- und Kleinschreibung.");
 		}
 
 	}
